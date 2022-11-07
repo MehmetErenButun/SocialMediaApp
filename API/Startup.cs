@@ -44,7 +44,9 @@ namespace API
             services.AddCors(o=>
             {
                 o.AddPolicy("CorsPolicy",policy=>
-                policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000"));
+                {
+                policy.AllowAnyMethod().AllowAnyHeader().AllowCredentials().AllowAnyOrigin().WithOrigins("http://localhost:3000");
+            });
             });
 
             services.AddApplicationRegistration(_configuration);
@@ -61,11 +63,12 @@ namespace API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors(policy=>
+            policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
             app.UseAuthorization();
 
